@@ -10,8 +10,8 @@ const Chat = ({ data: { allMessages = [], loading = false } }) => {
 
   return (
     <div>
-      {allMessages.map(msg => (
-        <Message>{msg.content}</Message>
+      {allMessages.map((msg, i) => (
+        <Message key={i}>{msg.content}</Message>
       ))}
     </div>
   )
