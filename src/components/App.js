@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
-import Message from './Message'
+import Chat from './Chat'
 
 class App extends Component {
   render() {
     return (
-      <div>
-        <Message>
-          Salam
-        </Message>
-      </div>
+      <Chat messages={['hi', 'foo']} />
     )
   }
 }
