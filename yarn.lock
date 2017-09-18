@@ -6004,7 +6004,7 @@ stylis@^3.2.1:
   version "3.2.16"
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.2.16.tgz#f336893e55f9f13299b39c01af3b10546cd7507a"
 
-subscriptions-transport-ws@^0.8.2:
+subscriptions-transport-ws@0.8.3, subscriptions-transport-ws@^0.8.2:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/subscriptions-transport-ws/-/subscriptions-transport-ws-0.8.3.tgz#d4b22db7f5951bd30e7c6f4dc4774d34ed9f1751"
   dependencies:
@@ -6012,19 +6012,6 @@ subscriptions-transport-ws@^0.8.2:
     eventemitter3 "^2.0.3"
     graphql-subscriptions "^0.4.4"
     graphql-tag "^2.4.2"
-    iterall "^1.1.1"
-    lodash.assign "^4.2.0"
-    lodash.isobject "^3.0.2"
-    lodash.isstring "^4.0.1"
-    symbol-observable "^1.0.4"
-    ws "^3.0.0"
-
-subscriptions-transport-ws@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/subscriptions-transport-ws/-/subscriptions-transport-ws-0.9.0.tgz#3dedd96a8fd01e63bdaf855c2ca0dcc68a87102e"
-  dependencies:
-    backo2 "^1.0.2"
-    eventemitter3 "^2.0.3"
     iterall "^1.1.1"
     lodash.assign "^4.2.0"
     lodash.isobject "^3.0.2"
