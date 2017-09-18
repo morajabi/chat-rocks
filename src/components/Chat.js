@@ -1,12 +1,26 @@
 import React from 'react'
+import { gql, graphql } from 'react-apollo'
+
 import Message from './Message'
 
-const Chat = ({ messages = [] }) => (
-  <div>
-    {messages.map(msg => (
-      <Message>{msg}</Message>
-    ))}
-  </div>
-)
+const Chat = ({ data: { allMessages = [], loading = false } }) => {
+  if (loading) {
+    return <div>loading...</div>
+  }
 
-export default Chat
+  return (
+    <div>
+      {allMessages.map(msg => (
+        <Message>{msg.content}</Message>
+      ))}
+    </div>
+  )
+}
+
+const getAllMessages = gql`query {
+  allMessages {
+    content
+  }
+}`
+
+export default graphql(getAllMessages)(Chat)
