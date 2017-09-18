@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import styled from 'styled-components'
+import { gql, graphql } from 'react-apollo'
 
 const Wrapper = styled.form`
   display: block;
@@ -28,11 +29,48 @@ const SendButton = styled.button`
   color: white;
 `
 
-const Compose = () => (
-  <Wrapper onSubmit={e => e.preventDefault()}>
-    <Input />
-    <SendButton>Send</SendButton>
-  </Wrapper>
-)
+class Compose extends PureComponent {
 
-export default Compose
+  defaultProps = {
+    mutate: () => {}
+  }
+
+  state = {
+    content: ''
+  }
+
+  render() {
+    return (
+      <Wrapper onSubmit={this.submitted}>
+        <Input
+          value={this.state.content}
+          onChange={this.inputChanged}
+        />
+        <SendButton>Send</SendButton>
+      </Wrapper>
+    )
+  }
+
+  inputChanged = e => {
+    this.setState({ content: e.target.value })
+  }
+
+  submitted = e => {
+    e.preventDefault()
+    this.props.mutate({
+      variables: { content: this.state.content }
+    }).then(({ data }) => {
+      console.log('messsage sent: ', data)
+    }).catch((error) => {
+      console.log('error occurred while sending message: ', error)
+    })
+  }
+}
+
+const createMessage = gql`mutation createMessage($content: String!) {
+  createMessage(content: $content) {
+    content
+  }
+}`
+
+export default graphql(createMessage)(Compose)

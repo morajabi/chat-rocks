@@ -17,7 +17,7 @@ const Chat = ({ data: { allMessages = [], loading = false } }) => {
   )
 }
 
-const getAllMessages = gql`query {
+const getAllMessages = gql`query allMessages {
   allMessages {
     content
   }
