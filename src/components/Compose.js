@@ -31,7 +31,7 @@ const SendButton = styled.button`
 
 class Compose extends PureComponent {
 
-  defaultProps = {
+  static defaultProps = {
     mutate: () => {}
   }
 
