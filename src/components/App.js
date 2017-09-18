@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
+
 import Chat from './Chat'
+import Compose from './Compose'
 
 class App extends Component {
   render() {
     return (
-      <Chat />
+      <div>
+        <Compose />
+        <Chat />
+      </div>
     )
   }
 }
