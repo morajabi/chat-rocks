@@ -22,6 +22,7 @@ const wsClient = new SubscriptionClient(
 
 const networkInterface = createNetworkInterface({
   uri: 'https://api.graph.cool/simple/v1/chat-rocks',
+  // dataIdFromObject: obj => obj.id
 })
 
 // Extend the network interface with the WebSocket

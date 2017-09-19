@@ -58,9 +58,19 @@ class Compose extends PureComponent {
   submitted = e => {
     e.preventDefault()
     this.props.mutate({
-      variables: { content: this.state.content }
+      variables: { content: this.state.content },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        createMessage: {
+          __typename: 'Message',
+          id: '',
+          content: this.state.content,
+        },
+      },
     }).then(({ data }) => {
       console.log('messsage sent: ', data)
+      // Clear the input
+      this.setState({ content: '' })
     }).catch((error) => {
       console.log('error occurred while sending message: ', error)
     })
@@ -69,8 +79,25 @@ class Compose extends PureComponent {
 
 const createMessage = gql`mutation createMessage($content: String!) {
   createMessage(content: $content) {
+    id
     content
   }
 }`
 
-export default graphql(createMessage)(Compose)
+const getAllMessages = gql`query {
+  allMessages {
+    id
+    content
+  }
+}`
+
+export default graphql(createMessage, {
+  options: {
+    update: (proxy, { data: { createMessage } }) => {
+      const data = proxy.readQuery({ query: getAllMessages });
+      data.allMessages.push(createMessage);
+      console.log(data)
+      proxy.writeQuery({ query: getAllMessages, data });
+    },
+  },
+})(Compose)
