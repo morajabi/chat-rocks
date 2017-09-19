@@ -9,7 +9,7 @@ class Chat extends PureComponent {
   }
 
   componentWillReceiveProps(newProps) {
-    if (!newProps.messages.loading) {
+    if (newProps.messages.loading) {
       return
     }
 
@@ -22,6 +22,10 @@ class Chat extends PureComponent {
     }
   }
 
+  componentDidUpdate() {
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+
   render() {
     const { messages: { allMessages = [], loading = false } } = this.props
 
@@ -30,7 +34,7 @@ class Chat extends PureComponent {
     }
 
     return (
-      <div>
+      <div style={{ paddingBottom: '3.5rem' }}>
         {allMessages.map((msg, i) => (
           <Message key={i}>{msg.content}</Message>
         ))}

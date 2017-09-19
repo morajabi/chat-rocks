@@ -5,6 +5,10 @@ const Wrapper = styled.div`
   padding: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid #ccc;
+
+  &:last-child {
+    border-bottom: none;
+  }
 `
 
 const Message = ({ children }) => (
