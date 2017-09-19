@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import styled from 'styled-components'
-import { gql, graphql } from 'react-apollo'
+import { gql, graphql, compose } from 'react-apollo'
 
 const Wrapper = styled.form`
   position: fixed;
@@ -70,8 +70,17 @@ class Compose extends PureComponent {
       return
     }
 
+    // Get userId if user is logged in
+    const userId = this.props.user.user && this.props.user.user.id
+    const displayName = this.props.user.user && this.props.user.user.displayName
+    console.log('compose message userId:', userId)
+
     this.props.mutate({
-      variables: { content: this.state.content },
+      variables: {
+        content: this.state.content,
+        userId,
+      },
+
       // Add quick optimistic response for better UX
       optimisticResponse: {
         __typename: 'Mutation',
@@ -79,6 +88,11 @@ class Compose extends PureComponent {
           __typename: 'Message', // We need to declare all of these
           id: '',
           content: this.state.content,
+          by: userId ? {
+            __typename: 'User',
+            id: userId,
+            displayName,
+          } : null
         },
       },
     }).then(({ data }) => {
@@ -91,29 +105,56 @@ class Compose extends PureComponent {
   }
 }
 
-const createMessage = gql`mutation createMessage($content: String!) {
-  createMessage(content: $content) {
+const createMessage = gql`
+mutation createMessage($content: String!, $userId: ID) {
+  createMessage(content: $content, byId: $userId) {
     id
     content
+    by {
+      id
+      displayName
+    }
   }
 }`
 
-const getAllMessages = gql`query {
+const getAllMessages = gql`query  {
   allMessages {
     id
     content
+    by {
+      id
+      displayName
+    }
   }
 }`
 
-export default graphql(createMessage, {
-  options: {
-    // Define how should Apollo update the cache.
-    // We don't need to handle duplicate entries here,
-    // Apollo takes care of that for now.
-    update: (proxy, { data: { createMessage } }) => {
-      const data = proxy.readQuery({ query: getAllMessages });
-      data.allMessages.push(createMessage);
-      proxy.writeQuery({ query: getAllMessages, data });
+const getUser = gql`query getUser {
+  user {
+    id
+    displayName
+    picture
+  }
+}`
+
+export default compose(
+  graphql(createMessage, {
+    options: {
+      // Define how should Apollo update the cache.
+      // We don't need to handle duplicate entries here,
+      // Apollo takes care of that for now.
+      update: (proxy, { data: { createMessage } }) => {
+        const data = proxy.readQuery({ query: getAllMessages })
+        console.log('[Compose update] proxy data', data)
+        data.allMessages.push({ ...createMessage })
+        console.log('[Compose update] createMessage', createMessage)
+        proxy.writeQuery({ query: getAllMessages, data })
+      },
     },
-  },
-})(Compose)
+  }),
+  graphql(getUser, {
+    name: 'user',
+    options: {
+      fetchPolicy: 'network-only',
+    },
+  })
+)(Compose)

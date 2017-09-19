@@ -28,7 +28,6 @@ class Chat extends PureComponent {
 
   render() {
     const { messages: { allMessages = [], loading = false } } = this.props
-
     if (loading) {
       return <div>loading...</div>
     }
@@ -36,7 +35,12 @@ class Chat extends PureComponent {
     return (
       <div style={{ paddingBottom: '3.5rem' }}>
         {allMessages.map((msg, i) => (
-          <Message key={i}>{msg.content}</Message>
+          <Message
+            displayName={msg.by && msg.by.displayName}
+            key={i}
+          >
+            {msg.content}
+          </Message>
         ))}
       </div>
     )
@@ -47,6 +51,10 @@ const getAllMessages = gql`query allMessages {
   allMessages {
     id
     content
+    by {
+      id
+      displayName
+    }
   }
 }`
 
@@ -56,6 +64,10 @@ const messageSubscription = gql`subscription messageSubscription {
     node {
       id
       content
+      by {
+        id
+        displayName
+      }
     }
   }
 }`
@@ -75,9 +87,12 @@ const withData = graphql(getAllMessages, {
 
           // Where magic happens
           updateQuery: (prev, { subscriptionData }) => {
+            console.log('update query started...')
             if (!subscriptionData.data) {
               return prev;
             }
+
+            console.log('update query 1...')
 
             const newMessage = subscriptionData.data.Message.node;
 
@@ -88,12 +103,14 @@ const withData = graphql(getAllMessages, {
             ) {
               return prev
             }
+            console.log('update query 2 (end)')
+            console.log('prev allMessages:', prev.allMessages)
 
             return {
               allMessages: [
                 ...prev.allMessages,
                 {
-                  ...newMessage
+                  ...newMessage,
                 }
               ]
             }
