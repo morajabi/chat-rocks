@@ -3,11 +3,10 @@ import styled, { css } from 'styled-components'
 
 const Wrapper = styled.div`
   padding: 10px;
-  margin-bottom: 10px;
   border-bottom: 1px solid #ccc;
 
   ${p => p.own && css`
-    background: #f0f0f0;
+    background: #f2f2f2;
   `}
 
   &:last-child {
