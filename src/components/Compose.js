@@ -59,17 +59,18 @@ class Compose extends PureComponent {
     e.preventDefault()
     this.props.mutate({
       variables: { content: this.state.content },
+      // Add quick optimistic response for better UX
       optimisticResponse: {
         __typename: 'Mutation',
         createMessage: {
-          __typename: 'Message',
+          __typename: 'Message', // We need to declare all these
           id: '',
           content: this.state.content,
         },
       },
     }).then(({ data }) => {
       console.log('messsage sent: ', data)
-      // Clear the input
+      // Clear the input to type new
       this.setState({ content: '' })
     }).catch((error) => {
       console.log('error occurred while sending message: ', error)
@@ -93,10 +94,12 @@ const getAllMessages = gql`query {
 
 export default graphql(createMessage, {
   options: {
+    // Define how should Apollo update the cache.
+    // We don't need to handle duplicate entries here,
+    // Apollo takes care of that for now.
     update: (proxy, { data: { createMessage } }) => {
       const data = proxy.readQuery({ query: getAllMessages });
       data.allMessages.push(createMessage);
-      console.log(data)
       proxy.writeQuery({ query: getAllMessages, data });
     },
   },

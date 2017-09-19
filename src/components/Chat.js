@@ -60,12 +60,16 @@ const withData = graphql(getAllMessages, {
   name: 'messages',
   props: props => {
     return {
+      // Rename data to messages
       messages: props.messages,
+
+      // Declare subscriptions function
       subscribeToNewMessage: params => {
         return props.messages.subscribeToMore({
           document: messageSubscription,
           variables: null,
 
+          // Where magic happens
           updateQuery: (prev, { subscriptionData }) => {
             if (!subscriptionData.data) {
               return prev;
@@ -73,6 +77,7 @@ const withData = graphql(getAllMessages, {
 
             const newMessage = subscriptionData.data.Message.node;
 
+            // Check for duplicates
             if (
               newMessage.id === '' ||
               prev.allMessages.find(m => m.id === newMessage.id)
@@ -95,5 +100,4 @@ const withData = graphql(getAllMessages, {
   }
 })
 
-// export default graphql(getAllMessages)(Chat)
 export default withData(Chat)
