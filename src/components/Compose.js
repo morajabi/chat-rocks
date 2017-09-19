@@ -76,7 +76,7 @@ class Compose extends PureComponent {
       optimisticResponse: {
         __typename: 'Mutation',
         createMessage: {
-          __typename: 'Message', // We need to declare all these
+          __typename: 'Message', // We need to declare all of these
           id: '',
           content: this.state.content,
         },

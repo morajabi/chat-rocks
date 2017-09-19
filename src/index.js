@@ -22,8 +22,23 @@ const wsClient = new SubscriptionClient(
 
 const networkInterface = createNetworkInterface({
   uri: 'https://api.graph.cool/simple/v1/chat-rocks',
-  // dataIdFromObject: obj => obj.id
+  dataIdFromObject: o => o.id,
 })
+
+networkInterface.use([{
+  applyMiddleware(req, next) {
+    // Create headers object if needed
+    if (!req.options.headers) {
+      req.options.headers = {}
+    }
+    // Get token
+    let auth0IdToken = localStorage.getItem('auth0IdToken')
+    // Set in header for auth in server
+    req.options.headers.authorization = auth0IdToken ?
+      `Bearer ${auth0IdToken}` : null
+    next()
+  },
+}])
 
 // Extend the network interface with the WebSocket
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
