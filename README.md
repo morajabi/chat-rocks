@@ -1,7 +1,7 @@
 # Chat Rocks 🚀
-## GitHub is Typing ...
+### GitHub is Typing ...
 
-![https://image.ibb.co/edRD3k/Screen_Shot_2017_09_20_at_11_45_40_AM.png](Screenshot)
+![Screenshot](https://image.ibb.co/edRD3k/Screen_Shot_2017_09_20_at_11_45_40_AM.png)
 
 Learn Apollo, GraphQL, React and styled-components in a single chat app! 
 But wait... There's more:
